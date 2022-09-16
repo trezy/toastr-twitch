@@ -9,6 +9,13 @@ import { RefreshingAuthProvider } from '@twurple/auth'
 
 
 
+// Local imports
+import { commands } from '../commands/index.js'
+
+
+
+
+
 // Constants
 const {
 	TWITCH_ACCESS_TOKEN,
@@ -44,17 +51,57 @@ class BotClass{
 		})
 	}
 
-	async start() {
-		this.twitchChatClient.onMessage(async (...args) => {
-			const [
-				/* channel */,
-				/* username */,
-				/* message */,
-				messageObject,
-			] = args
+	async handleCommandResult(options) {
+		const {
+			result,
+			messageObject,
+		} = options
 
-			console.log(messageObject)
-		})
+		if (!result) {
+			return
+		}
+
+		if (typeof result === 'string') {
+			this.twitchChatClient.say(TWITCH_CHANNEL, result)
+		}
+	}
+
+	async handleMessage(...args) {
+		const [
+			/* channel */,
+			/* username */,
+			/* message */,
+			messageObject,
+		] = args
+
+		if (!messageObject.content.value.startsWith('!')) {
+			return
+		}
+
+		const [
+			commandName,
+			commandArgs,
+		] = messageObject.content.value
+			.replace(/^!/, '')
+			.replace(/\s+/, ' ')
+			.split(' ')
+		const command = commands[commandName.toLowerCase()]
+
+		if (command) {
+			const result = command({
+				commandArgs,
+				messageObject,
+			})
+
+			this.handleCommandResult({
+				result,
+				messageObject,
+			})
+		}
+	}
+
+	async start() {
+		this.twitchChatClient.onMessage((...args) => this.handleMessage(...args))
 
 		await this.twitchChatClient.connect()
 
