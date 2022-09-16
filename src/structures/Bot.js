@@ -62,8 +62,16 @@ class BotClass{
 		}
 
 		if (typeof result === 'string') {
-			this.twitchChatClient.say(TWITCH_CHANNEL, result)
+			return this.twitchChatClient.say(TWITCH_CHANNEL, result)
 		}
+
+		const responseOptions = {}
+
+		if (result.isReply) {
+			responseOptions.replyTo = messageObject
+		}
+
+		return this.twitchChatClient.say(TWITCH_CHANNEL, result.content, responseOptions)
 	}
 
 	async handleMessage(...args) {
@@ -80,7 +88,7 @@ class BotClass{
 
 		const [
 			commandName,
-			commandArgs,
+			...commandArgs
 		] = messageObject.content.value
 			.replace(/^!/, '')
 			.replace(/\s+/, ' ')
@@ -88,7 +96,7 @@ class BotClass{
 		const command = commands[commandName.toLowerCase()]
 
 		if (command) {
-			const result = command({
+			const result = await command({
 				commandArgs,
 				messageObject,
 			})
