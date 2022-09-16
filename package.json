@@ -9,6 +9,9 @@
     "dev": "NODE_ENV=development DEBUG=true nodemon src/index.js",
     "start": "node dist/index.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "nodemon": "^2.0.20"
   },
