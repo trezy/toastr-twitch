@@ -1,0 +1,22 @@
+{
+  "name": "toastr",
+  "version": "0.0.0-development",
+  "main": "index.js",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "scripts": {
+    "test": "NODE_ENV=test nyc --reporter=lcovonly --reporter=text-summary mocha",
+    "dev": "NODE_ENV=development DEBUG=true nodemon src/index.js",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "@twurple/auth": "^5.2.3",
+    "@twurple/chat": "^5.2.3",
+    "dotenv": "^16.0.2",
+    "zustand": "^4.1.1"
+  },
+  "packageManager": "yarn@3.2.3"
+}
