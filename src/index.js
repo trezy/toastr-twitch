@@ -6,12 +6,15 @@ import 'dotenv/config'
 
 
 // Local imports
+import { API } from './structures/API.js'
 import { Bot } from './structures/Bot.js'
 
 
 
 
 
-const bot = new Bot
+// Start the bot
+Bot.start()
 
-bot.initialise()
+// Start the web server
+API.start()

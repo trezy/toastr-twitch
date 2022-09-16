@@ -22,7 +22,7 @@ const {
 
 
 
-export class Bot{
+class BotClass{
 	twitchAuthProvider = null
 	twitchChatClient = null
 
@@ -44,7 +44,7 @@ export class Bot{
 		})
 	}
 
-	async initialise() {
+	async start() {
 		this.twitchChatClient.onMessage(async (...args) => {
 			const [
 				/* channel */,
@@ -63,3 +63,5 @@ export class Bot{
 		})
 	}
 }
+
+export const Bot = new BotClass
