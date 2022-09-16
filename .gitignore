@@ -69,7 +69,6 @@ typings/
 *.tgz
 
 # Yarn files
-.pnp.*
 .yarn/*
 !.yarn/cache
 !.yarn/patches
