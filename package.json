@@ -20,6 +20,7 @@
     "@twurple/auth": "^5.2.3",
     "@twurple/chat": "^5.2.3",
     "dotenv": "^16.0.2",
+    "faunadb": "^4.7.0",
     "koa": "^2.13.4",
     "koa-body": "^5.0.0",
     "koa-compress": "^5.1.0",
