@@ -49,5 +49,8 @@ export function botUptime() {
 		})
 		.format(startedAtDate)
 
-	return `I've been running since ${startedAtDateString} at ${startedAtTimeString}. (${uptimeString})`
+	return {
+		content: `I've been running since ${startedAtDateString} at ${startedAtTimeString}. (${uptimeString})`,
+		isReply: true,
+	}
 }
