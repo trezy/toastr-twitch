@@ -14,15 +14,15 @@ export function botUptime() {
 	const uptimeArray = []
 
 	if (uptimeHours) {
-		uptimeArray.push(`${uptimeHours} hours`)
+		uptimeArray.push(`${uptimeHours} hour${uptimeHours > 1 ? 's' : ''}`)
 	}
 
 	if (uptimeMinutes) {
-		uptimeArray.push(`${uptimeMinutes} minutes`)
+		uptimeArray.push(`${uptimeMinutes} minute${uptimeMinutes > 1 ? 's' : ''}`)
 	}
 
 	if (uptimeSeconds) {
-		uptimeArray.push(`${uptimeSeconds} seconds`)
+		uptimeArray.push(`${uptimeSeconds} second${uptimeSeconds > 1 ? 's' : ''}`)
 	}
 
 	if (uptimeArray.length > 1) {
