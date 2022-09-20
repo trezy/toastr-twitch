@@ -91,18 +91,28 @@ export async function currency(options) {
 		return response
 	}
 
-	const formattedDestinationValue = Intl
-		.NumberFormat('en-US', {
-			currency: destinationExchangeRate,
-			style: 'currency',
-		})
-		.format((value * EXCHANGE_RATES[sourceExchangeRate]) * EXCHANGE_RATES[destinationExchangeRate])
-	const formattedSourceValue = Intl
-		.NumberFormat('en-US', {
-			currency: sourceExchangeRate,
-			style: 'currency',
-		})
-		.format(value)
+	let destinationValue = (value * EXCHANGE_RATES[sourceExchangeRate]) * EXCHANGE_RATES[destinationExchangeRate]
+
+	let formattedDestinationValue = `${destinationValue} ${destinationExchangeRate}`
+	let formattedSourceValue = `${value} ${sourceExchangeRate}`
+
+	try {
+		formattedDestinationValue = Intl
+			.NumberFormat('en-US', {
+				currency: destinationExchangeRate,
+				style: 'currency',
+			})
+			.format((value * EXCHANGE_RATES[sourceExchangeRate]) * EXCHANGE_RATES[destinationExchangeRate])
+	} catch (error) {}
+
+	try {
+		formattedSourceValue = Intl
+			.NumberFormat('en-US', {
+				currency: sourceExchangeRate,
+				style: 'currency',
+			})
+			.format(value)
+	} catch (error) {}
 
 	response.content = `${formattedSourceValue} (${CURRENCIES[sourceExchangeRate]}) is equivalent to ${formattedDestinationValue} (${CURRENCIES[destinationExchangeRate]})`
 	return response
