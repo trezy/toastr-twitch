@@ -26,7 +26,7 @@ export function botUptime() {
 	}
 
 	if (uptimeArray.length > 1) {
-		uptimeArray[uptimeArray.length - 1] = `and `
+		uptimeArray[uptimeArray.length - 1] = `and ${uptimeArray[uptimeArray.length - 1]}`
 	}
 
 	let uptimeString = uptimeArray.join(' ')
