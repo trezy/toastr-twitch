@@ -1,4 +1,5 @@
 // Local imports
+import { currency } from './currency.js'
 import { eightBall } from './8ball.js'
 import { fortune } from './fortune.js'
 import { ping } from './ping.js'
@@ -10,6 +11,7 @@ import { ping } from './ping.js'
 export const commands = Object
 	.entries({
 		'8ball': eightBall,
+		currency,
 		fortune,
 		ping,
 	})

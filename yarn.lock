@@ -2014,6 +2014,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mri@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "mri@npm:1.2.0"
+  checksum: 83f515abbcff60150873e424894a2f65d68037e5a7fcde8a9e2b285ee9c13ac581b63cfc1e6826c4732de3aeb84902f7c1e16b7aff46cd3f897a0f757a894e85
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.1.2":
   version: 2.1.2
   resolution: "ms@npm:2.1.2"
@@ -2631,6 +2638,7 @@ __metadata:
     koa-compress: ^5.1.0
     koa-no-trailing-slash: ^2.1.0
     koa-router: ^12.0.0
+    mri: ^1.2.0
     node-fetch: ^3.2.10
     nodemon: ^2.0.20
     winston: ^3.8.2
