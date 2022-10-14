@@ -5,12 +5,14 @@ import { getRandomFortune } from '../helpers/database.js'
 
 
 
+export const name = 'fortune'
+
 /**
  * Returns a random fortune from a fortune cookie.
  *
  * @returns {object} The response object.
  */
-export async function fortune() {
+export async function handler() {
 	const { data: fortune } = await getRandomFortune()
 
 	return {

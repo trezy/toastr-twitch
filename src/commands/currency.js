@@ -20,12 +20,14 @@ const EXCHANGE_RATES = {}
 
 
 
+export const name = 'currency'
+
 /**
  * Converts a value from one type to another.
  *
  * @returns {object} The response object.
  */
-export async function currency(options) {
+export async function handler(options) {
 	const { commandArgs } = options
 
 	// Get a list of supported currencies from the Open Exchange Rates API if we haven't already

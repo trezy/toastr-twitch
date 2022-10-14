@@ -12,12 +12,16 @@ import { logger } from '../helpers/logger.js'
 
 
 
+export const name = '8ball'
+
+export const aliases = ['8-ball']
+
 /**
  * Responds to a query with an answer from the magic 8-ball.
  *
  * @returns {object} The response object.
  */
-export async function eightBall(options) {
+export async function handler(options) {
 	const { commandArgs } = options
 
 	if (!commandArgs?.length) {

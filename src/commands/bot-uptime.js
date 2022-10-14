@@ -1,9 +1,13 @@
+export const name = 'botuptime'
+
+export const aliases = ['bot-uptime']
+
 /**
  * Responds with a basic message. Used to confirm bot is working properly.
  *
  * @returns {string} The response string.
  */
-export function botUptime() {
+export function handler() {
 	// Generate a string for the bot's uptime
 	const uptime = performance.now()
 	const uptimeHours = Math.floor(uptime / 1000 / 60 / 60)
