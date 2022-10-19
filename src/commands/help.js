@@ -38,5 +38,5 @@ export async function handler() {
 		.filter(Boolean)
 		.join(', ')
 
-	return `The current command available include: ${commandNames}.`
+	return `The commands currently available include: ${commandNames}.`
 }
