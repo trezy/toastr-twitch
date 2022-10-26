@@ -13,8 +13,12 @@ import { Bot } from './structures/Bot.js'
 
 
 
-// Start the bot
-Bot.start()
+const isDisabled = Number(process.env.IS_DISABLED)
 
-// Start the web server
-API.start()
+if (!isDisabled) {
+	// Start the bot
+	Bot.start()
+
+	// Start the web server
+	API.start()
+}
