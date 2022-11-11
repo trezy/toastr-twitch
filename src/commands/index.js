@@ -6,6 +6,7 @@ import * as eightBall from './8ball.js'
 import * as fortune from './fortune.js'
 import * as help from './help.js'
 import * as instagram from './instagram.js'
+import * as mastodon from './mastodon.js'
 import * as ping from './ping.js'
 import * as tiktok from './tiktok.js'
 import * as twitter from './twitter.js'
@@ -23,6 +24,7 @@ export const commands = [
 	fortune,
 	help,
 	instagram,
+	mastodon,
 	ping,
 	tiktok,
 	twitter,
