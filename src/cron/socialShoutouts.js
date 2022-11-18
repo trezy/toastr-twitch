@@ -9,6 +9,7 @@ import { commands } from '../commands/index.js'
 const SOCIAL_COMMAND_ARRAY = [
 	commands.discord,
 	commands.instagram,
+	commands.mastodon,
 	commands.tiktok,
 	commands.twitter,
 	commands.youtube,
