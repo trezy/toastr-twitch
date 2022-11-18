@@ -3,7 +3,9 @@ import {
 	ChatClient,
 	LogLevel,
 } from '@twurple/chat'
-import { RefreshingAuthProvider } from '@twurple/auth'
+import { CronJob } from 'cron'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 
 
@@ -11,45 +13,23 @@ import { RefreshingAuthProvider } from '@twurple/auth'
 
 // Local imports
 import { commands } from '../commands/index.js'
+import * as db from '../helpers/db.js'
+import * as Twitch from './Twitch.js'
 
 
 
 
 
 // Constants
-const {
-	TWITCH_ACCESS_TOKEN,
-	TWITCH_CHANNEL,
-	TWITCH_CLIENT_ID,
-	TWITCH_CLIENT_SECRET,
-	TWITCH_REFRESH_TOKEN,
-} = process.env
+const { TWITCH_CHANNEL } = process.env
 
 
 
 
 
 class BotClass{
-	twitchAuthProvider = null
-	twitchChatClient = null
-
-	constructor() {
-		this.twitchAuthProvider = new RefreshingAuthProvider(
-			{
-				clientId: TWITCH_CLIENT_ID,
-				clientSecret: TWITCH_CLIENT_SECRET,
-			},
-			{
-				accessToken: TWITCH_ACCESS_TOKEN,
-				refreshToken: TWITCH_REFRESH_TOKEN,
-			},
-		)
-
-		this.twitchChatClient = new ChatClient({
-			logger: { minLevel: LogLevel.DEBUG },
-			authProvider: this.twitchAuthProvider,
-		})
-	}
+	jobs = []
+	messageCounter = 0
 
 	async handleCommandResult(options) {
 		const {
@@ -62,7 +42,7 @@ class BotClass{
 		}
 
 		if (typeof result === 'string') {
-			return this.twitchChatClient.say(TWITCH_CHANNEL, result)
+			return Twitch.chatClient.say(TWITCH_CHANNEL, result)
 		}
 
 		const responseOptions = {}
@@ -71,7 +51,7 @@ class BotClass{
 			responseOptions.replyTo = messageObject
 		}
 
-		return this.twitchChatClient.say(TWITCH_CHANNEL, result.content, responseOptions)
+		return Twitch.chatClient.say(TWITCH_CHANNEL, result.content, responseOptions)
 	}
 
 	async handleMessage(...args) {
@@ -81,6 +61,10 @@ class BotClass{
 			/* message */,
 			messageObject,
 		] = args
+
+		this.messageCounter += 1
+
+		await db.addPoints(messageObject.userInfo.userId, 5)
 
 		if (!messageObject.content.value.startsWith('!')) {
 			return
@@ -108,13 +92,37 @@ class BotClass{
 		}
 	}
 
+	async initialiseCron() {
+		const cronPath = path.resolve(process.cwd(), 'src', 'cron')
+
+		const cronTaskFilenames = await fs.readdir(cronPath)
+
+		const cronTasks = await Promise.all(cronTaskFilenames.map(filename => {
+			const filePath = path.resolve(cronPath, filename)
+
+			return import(filePath)
+		}))
+
+		cronTasks.forEach(({ default: cronTask }) => {
+			this.jobs.push(new CronJob(
+				cronTask.runAt,
+				cronTask.handler,
+				cronTask.onCompleteHandler,
+				true,
+				null,
+				this,
+			))
+		})
+	}
+
 	async start() {
-		this.twitchChatClient.onMessage((...args) => this.handleMessage(...args))
+		Twitch.chatClient.onMessage((...args) => this.handleMessage(...args))
 
-		await this.twitchChatClient.connect()
+		await Twitch.chatClient.connect()
 
-		await this.twitchChatClient.onRegister(async() => {
-			await this.twitchChatClient.join(TWITCH_CHANNEL)
+		await Twitch.chatClient.onRegister(async() => {
+			await Twitch.chatClient.join(TWITCH_CHANNEL)
+			this.initialiseCron()
 		})
 	}
 }

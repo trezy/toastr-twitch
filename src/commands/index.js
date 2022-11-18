@@ -8,6 +8,7 @@ import * as help from './help.js'
 import * as instagram from './instagram.js'
 import * as mastodon from './mastodon.js'
 import * as ping from './ping.js'
+import * as points from './points.js'
 import * as tiktok from './tiktok.js'
 import * as twitter from './twitter.js'
 import * as youtube from './youtube.js'
@@ -26,6 +27,7 @@ export const commands = [
 	instagram,
 	mastodon,
 	ping,
+	points,
 	tiktok,
 	twitter,
 	youtube,
