@@ -6,11 +6,13 @@ import {
 	ROUND_TIME_LIMIT_STRING,
 } from './Constants.js'
 import { Bot } from '../../structures/Bot.js'
+import { calculateScore } from './calculateScore.js'
 import { commaSeparateArray } from '../../helpers/commaSeparateArray.js'
 import { generateCard } from './generateCard.js'
 import { Participant } from './Participant.js'
 import { STATE } from './State.js'
 import { endGame } from './endGame.js'
+import * as db from '../../helpers/db.js'
 
 
 
@@ -27,6 +29,7 @@ export const endRound = () => {
 		result = HIGHER
 	}
 
+	STATE.previousCard = STATE.currentCard
 	STATE.currentCard = newCard
 
 	const participants = Participant.getAll()
@@ -46,7 +49,8 @@ export const endRound = () => {
 		})
 	}
 
-	let response = `The new card is ${newCard}, which is ${result}!`
+	const score = calculateScore()
+	let response = `The new card is ${newCard}, which is ${result}! This round is worth ${score} points!`
 
 	if (losers.length === 1) {
 		response += ` ${losers[0].displayName} has been eliminated.`
@@ -58,9 +62,13 @@ export const endRound = () => {
 		response += ` ${losersString} have been eliminated.`
 	}
 
-	losers.forEach(loser => loser.delete())
-	winners.forEach(winner => winner.clearGuess())
 	STATE.round += 1
+
+	losers.forEach(loser => loser.delete())
+	winners.forEach(winner => {
+		db.addPoints(winner.id, score)
+		winner.clearGuess()
+	})
 
 	response += ` Will the next card be higher or lower? You have ${ROUND_TIME_LIMIT_STRING} to decide!`
 
