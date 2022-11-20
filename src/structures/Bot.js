@@ -37,16 +37,19 @@ class BotClass extends EventEmitter {
 			result,
 			messageObject,
 		} = options
+		const responseOptions = {}
 
 		if (!result) {
 			return
 		}
 
 		if (typeof result === 'string') {
-			return this.say({ result })
+			return this.say({
+				result: {
+					content: result,
+				},
+			})
 		}
-
-		const responseOptions = {}
 
 		if (result.isReply) {
 			responseOptions.replyTo = messageObject
