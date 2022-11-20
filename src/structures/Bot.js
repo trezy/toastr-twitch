@@ -1,9 +1,6 @@
 // Module imports
-import {
-	ChatClient,
-	LogLevel,
-} from '@twurple/chat'
 import { CronJob } from 'cron'
+import EventEmitter from 'node:events'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -27,9 +24,13 @@ const { TWITCH_CHANNEL } = process.env
 
 
 
-class BotClass{
+class BotClass extends EventEmitter {
 	jobs = []
 	messageCounter = 0
+
+	constructor() {
+		super()
+	}
 
 	async handleCommandResult(options) {
 		const {
@@ -42,7 +43,7 @@ class BotClass{
 		}
 
 		if (typeof result === 'string') {
-			return Twitch.chatClient.say(TWITCH_CHANNEL, result)
+			return this.say({ result })
 		}
 
 		const responseOptions = {}
@@ -51,7 +52,7 @@ class BotClass{
 			responseOptions.replyTo = messageObject
 		}
 
-		return Twitch.chatClient.say(TWITCH_CHANNEL, result.content, responseOptions)
+		return this.say(options)
 	}
 
 	async handleMessage(...args) {
@@ -66,10 +67,6 @@ class BotClass{
 
 		await db.addPoints(messageObject.userInfo.userId, 5)
 
-		if (!messageObject.content.value.startsWith('!')) {
-			return
-		}
-
 		const [
 			commandName,
 			...commandArgs
@@ -77,19 +74,30 @@ class BotClass{
 			.replace(/^!/, '')
 			.replace(/\s+/, ' ')
 			.split(' ')
-		const command = commands[commandName.toLowerCase()]
 
-		if (command) {
-			const result = await command({
-				commandArgs,
-				messageObject,
-			})
+		if (messageObject.content.value.startsWith('!')) {
+			const command = commands[commandName.toLowerCase()]
 
-			this.handleCommandResult({
-				result,
-				messageObject,
-			})
+			if (command) {
+				const result = await command({
+					commandArgs,
+					messageObject,
+				})
+
+				this.handleCommandResult({
+					result,
+					messageObject,
+				})
+			}
 		}
+
+		this.emit('message', {
+			commandArgs: [
+				commandName,
+				...commandArgs
+			],
+			messageObject,
+		})
 	}
 
 	async initialiseCron() {
@@ -113,6 +121,21 @@ class BotClass{
 				this,
 			))
 		})
+	}
+
+	say(options) {
+		const {
+			result,
+			messageObject,
+		} = options
+
+		const responseOptions = {}
+
+		if (result.isReply) {
+			responseOptions.replyTo = messageObject
+		}
+
+		return Twitch.chatClient.say(TWITCH_CHANNEL, result.content, responseOptions)
 	}
 
 	async start() {

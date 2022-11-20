@@ -5,6 +5,7 @@ import * as discord from './discord.js'
 import * as eightBall from './8ball.js'
 import * as fortune from './fortune.js'
 import * as help from './help.js'
+import * as higherLower from './higher-lower.js'
 import * as instagram from './instagram.js'
 import * as mastodon from './mastodon.js'
 import * as ping from './ping.js'
@@ -24,6 +25,7 @@ export const commands = [
 	eightBall,
 	fortune,
 	help,
+	higherLower,
 	instagram,
 	mastodon,
 	ping,
